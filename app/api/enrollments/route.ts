@@ -19,9 +19,6 @@ export async function GET(request: Request) {
 
     if (session?.user?.userName && role === "customer") {
       const enrollments = await prismadb.enrollment.findMany({
-        where: {
-          createdBy: userId,
-        },
         include: {
           vehicle: true,
         },
@@ -82,3 +79,31 @@ export async function POST(request: Request) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+
+    const id = searchParams.get("id");
+
+    const { status } = await request.json();
+
+    const session = await getServerSession(options);
+    if (session?.user?.userName && session?.user?.role === "admin" && id) {
+      const updateEnrollment = await prismadb.enrollment.update({
+        where: {
+          id,
+        },
+        data: {
+          status,
+        },
+      });
+      return NextResponse.json(updateEnrollment);
+    }
+  } catch (error) {
+    console.log("[ENROLLMENT_PUT]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+

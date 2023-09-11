@@ -20,7 +20,7 @@ const Navbar = ({ user }: Props) => {
         <div>Customer Dashboard</div>
       )}
 
-      <div className="text-sm flex itmes-center justify-center">Hey 👋, <span className="font-bold">{user.userName}</span> </div>
+      <div className="text-sm flex itmes-center justify-center"><span className="font-bold my-auto px-2">Hey 👋, </span><span className="font-bold my-auto pr-4">{user.userName}</span>  <Link href="/api/auth/signout" className="p-2 rounded-lg bg-primary text-white"> logout</Link></div>
     </div>
   );
 };

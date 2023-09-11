@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSession } from "next-auth/react";
 import { useEnrollmentModal } from "@/hooks/use-enrollment-modal";
 import { EnrollmentList } from "@/components/main/enrollment-list";
+import Tabs from "@/components/main/tabs";
 
 const EnrollmentsPage = () => {
 
@@ -12,24 +13,40 @@ const EnrollmentsPage = () => {
 
   const isAdmin = session?.user?.role === 'admin';
   const [enrollmentData , setEnrollmentData] = useState([]);
+  const [filteredEnrollmentData, setFilteredEnrollmentData] = useState([]);
 
-  const getEnrollments = async () => {
+  const getEnrollments = async (activeTab : string) => {
     await axios.get("/api/enrollments").then((res) => {
       console.log(res)
-      setEnrollmentData(res.data);
+      const filteredData = res.data.filter((enrollment : any) => enrollment.status === activeTab);
+      setEnrollmentData(filteredData);
+      setFilteredEnrollmentData(filteredData);
     }
     ).catch((err) => {
       console.log(err);
     })
   };
 
-
   const onOpen = useEnrollmentModal((state) => state.onOpen);
   const isOpen = useEnrollmentModal((state) => state.isOpen);
 
+  const [activeTab, setActiveTab] = useState("pending");
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleTabClick = (tabName: string) => {
+    setActiveTab(tabName);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchValue(value);
+    const filteredData = enrollmentData.filter((enrollment: any) => enrollment?.vehicle?.VIN?.includes(value));
+    setFilteredEnrollmentData(filteredData);
+  };
+
   useEffect(() => {
-    getEnrollments();
-  }, []);
+    getEnrollments(activeTab);
+  }, [activeTab]);
 
   function loadMoreCustomers(){
     
@@ -56,16 +73,16 @@ const EnrollmentsPage = () => {
         </button> : null }
       </div>
       <div>
-        <form action=""></form>
+        <Tabs activeTab={activeTab} handleTabClick={handleTabClick}/>
       </div>
       <div>
-        <EnrollmentList data={enrollmentData}
+        <input type="text" placeholder="Search by VIN" value={searchValue} onChange={handleSearchChange} className="border border-gray-300 rounded-lg px-3 py-2 my-3" />
+        {filteredEnrollmentData.length > 0 ? <EnrollmentList data={filteredEnrollmentData}
           loadMore={loadMoreCustomers}
           loadMoreDisable={disableLoadMore}
           handleRowClick={handleRowClick}
-          updateData={handleCustomerUpdate}/>
-          isAdmin={isAdmin}
-
+          updateData={handleCustomerUpdate}
+          isAdmin={isAdmin}/> : <div> No Enrollments </div>}
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ const formSchema = z.object({
   VIN: z
     .string()
     .min(1)
-    .regex(/^[A-HJ-NPR-Z0-9]{17}$/),
+    .regex(/^[A-HJ-NPR-Z0-9]{8}$/),
   Make: z.string().min(1),
   Model: z.string().min(1),
   Year: z.number(),

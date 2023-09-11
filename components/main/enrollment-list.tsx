@@ -1,6 +1,8 @@
 import { Button } from '../ui/button';
 import { Table, tableDataType } from '../ui/table';
 import { createColumnHelper } from '@tanstack/react-table';
+import axios from 'axios';
+import {redirect} from 'next/navigation';
 
 const columnHelper = createColumnHelper<tableDataType>();
 
@@ -16,16 +18,36 @@ export function EnrollmentList({
   loadMoreDisable,
   handleRowClick,
   updateData,
+  isAdmin,
 }: {
   data: tableDataType[];
   loadMore?: () => void;
   loadMoreDisable?: boolean;
   handleRowClick: (data: tableDataType) => void;
   updateData: (res: IUpdateCustomerType) => void;
+  isAdmin?: boolean;
 }) {
   function handleCustomerUpdate({ id, type, bool, ind }: IUpdateCustomerType) {
 
   }
+
+  const accept = async (id: string) => {
+    try {
+      await axios.put(`/api/enrollments?id=${id}`, { status: 'accepted' })
+      redirect('/enrollments');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const reject = async (id: string) => {
+    try {
+      await axios.put(`/api/enrollments?id=${id}`, { status: 'rejected' });
+      redirect('/enrollments');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const columns: any = [
     columnHelper.accessor('vehicle.VIN', {
@@ -48,20 +70,20 @@ export function EnrollmentList({
       header: () => 'Status',
       cell: (info) => <span>{info.renderValue() || '0'}</span>,
     }),
-    columnHelper.accessor('', {
-      id: 'isTextSubscribe',
-      // header: () => 'Text Subscribe',
-      cell: (info) => (
-        <Button>Accept</Button>
-      ),
-    }),
-    columnHelper.accessor('', {
-      id: 'isEmailSubscribe',
-      // header: () => 'E-mail Subscribe',
-      cell: (info) => (
-<Button>Reject</Button>
-      ),
-    }),
+    ...(isAdmin
+      ? [
+          columnHelper.accessor('', {
+            id: 'isEmailSubscribe',
+            // header: () => 'Text Subscribe',
+            cell: (info) => <Button onClick={() => accept(info.row.original.id)}>Accept</Button>,
+          }),
+          columnHelper.accessor('', {
+            id: 'isEmailSubscribe',
+            // header: () => 'E-mail Subscribe',
+            cell: (info) => <Button onClick={() => reject(info.row.original.id)}>Reject</Button>,
+          }),
+        ]
+      : []),
   ];
 
   return (

@@ -13,10 +13,14 @@ import SubjectActive from "/public/assets/subcategories-active.svg";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import Tooltip from "./Tooltip";
 
 const Sidebar = () => {
+
+  const { data: session, status } = useSession();
+
   const menu = [
     {
       name: "Home",
@@ -36,12 +40,6 @@ const Sidebar = () => {
       iconActive: CategoryActive,
       link: "/enrollments",
     },
-    {
-      name: "Customers",
-      icon: Subject,
-      iconActive: SubjectActive,
-      link: "/customers",
-    },
   ];
 
   const [showSubMenu, setShowSubMenu] = useState(true);
@@ -56,6 +54,7 @@ const Sidebar = () => {
     console.log(pathname);
   });
 
+  if(session?.user?.role === 'admin') {
   return (
     <div className="bg-white  border-r h-screen relative">
       <aside className="w-20 2xl:w-24">
@@ -87,13 +86,12 @@ const Sidebar = () => {
               </div>
             ))}
           </div>
-          <div className="absolute bottom-5">
-            <Link href="/api/auth/signout">Logout</Link>
-          </div>
         </div>
       </aside>
     </div>
   );
+                  }
+  return <></>;
 };
 
 export default Sidebar;

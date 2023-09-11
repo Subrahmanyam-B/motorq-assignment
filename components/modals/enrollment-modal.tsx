@@ -57,17 +57,19 @@ export const EnrollmentModal = ({ data }: any) => {
 
   const findUser = async (userName: any) => {
     console.log("UsEWRNAME", userName);
-    await axios.get("/api/user").then((res) => {
-      console.log(
-        "createdBy",
-        res?.data.find((user: any) => user.userName === userName)?.id
-      );
-      form.setValue(
-        "createdBy",
-        res?.data.find((user: any) => user.userName === userName)?.id
-      );
-
-    });
+    if (userName) {
+      await axios.get("/api/user").then((res) => {
+        console.log(
+          "createdBy",
+          res?.data.find((user: any) => user.userName === userName)?.id
+        );
+        form.setValue(
+          "createdBy",
+          res?.data.find((user: any) => user.userName === userName)?.id
+        );
+  
+      });
+    }
     // .then((res) => form.setValue("createdBy" , res?.data.find((user: any) => user.userName === userName)))
   };
 
