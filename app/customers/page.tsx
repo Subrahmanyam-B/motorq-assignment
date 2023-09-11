@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import axios from 'axios';
 import { EnrollmentList } from "@/components/main/enrollment-list";
 
-const page = () => {
+const CustomersPage = () => {
   const getVehicles = async () => {
     await axios.get("/api/vehicles").then((res) => {
       console.log(res.data);
@@ -73,4 +73,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default CustomersPage;

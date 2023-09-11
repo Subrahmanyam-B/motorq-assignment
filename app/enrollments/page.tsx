@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useEnrollmentModal } from "@/hooks/use-enrollment-modal";
 import { EnrollmentList } from "@/components/main/enrollment-list";
 
-const page = () => {
+const EnrollmentsPage = () => {
   const getVehicles = async () => {
     await axios.get("/api/vehicles").then((res) => {
       console.log(res.data);
@@ -82,4 +82,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default EnrollmentsPage;

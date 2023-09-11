@@ -7,7 +7,7 @@ import Link from "next/link";
 import axios from 'axios';
 import { VehicleList } from "@/components/main/vehicle-list";
 
-const page = () => {
+const VehiclesPage = () => {
   const getVehicles = async () => {
     await axios.get("/api/vehicles").then((res) => {
       console.log(res.data);
@@ -107,4 +107,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default VehiclesPage;
