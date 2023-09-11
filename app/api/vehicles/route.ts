@@ -26,7 +26,7 @@ export async function POST(request: NextRequestWithAuth) {
   }
 }
 
-export async function GET(request: NextRequestWithAuth) {
+export async function GET(request: Request) {
   try {
     const session = await getServerSession(options);
 

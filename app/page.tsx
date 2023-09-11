@@ -1,9 +1,8 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
+import Navbar from "@/components/main/Navbar";
 
-
-export default async function  Home() {
-
+export default async function Home() {
   // const createUser = async () => {
   //   await prismadb.user.create({
   //     data: {
@@ -19,14 +18,13 @@ export default async function  Home() {
   // createUser();
 
   const session = await getServerSession(options);
-  console.log("Session" , session)
-
 
   return (
-    <main>This is the Home page
-
-      <button className='bg-gray-600 p-4 rounded-lg' >Sign Out</button>
-      <div>{session?.user?.role ? session?.user?.role : "None"}</div>
+    <main className="flex w-full">
+      <div className="w-full">
+        <Navbar user={session?.user} />
+        <div>{session?.user?.role ? session?.user?.role : "None"}</div>
+      </div>
     </main>
-  )
+  );
 }
