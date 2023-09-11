@@ -1,13 +1,28 @@
-import Link from "next/link"
+import Link from "next/link";
+
+interface User {
+  role: string;
+  userName: string;
+}
 
 interface Props {
-  user : Object
+  user: User;
 }
 
-const Navbar = ({user} : Props) => {
+const Navbar = ({ user }: Props) => {
+  console.log(user);
+
   return (
-    <div className='bg-blue-300 p-7 text-xl flex justify-between'>Navbar <Link className='bg-gray-600 p-2 text-white text-sm rounded-lg' href='/api/auth/signout'>Sign Out</Link></div>
-  )
-}
+    <div className="p-7 text-xl flex justify-between">
+      {user.role === "admin" ? (
+        <div>Admin Dashboard</div>
+      ) : (
+        <div>Customer Dashboard</div>
+      )}
 
-export default Navbar
+      <div className="text-sm flex itmes-center justify-center">Hey 👋, <span className="font-bold">{user.userName}</span> </div>
+    </div>
+  );
+};
+
+export default Navbar;

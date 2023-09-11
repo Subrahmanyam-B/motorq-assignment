@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import Logo from "/public/assets/logo.svg";
@@ -17,7 +17,6 @@ import { useEffect, useRef, useState } from "react";
 import Tooltip from "./Tooltip";
 
 const Sidebar = () => {
-
   const menu = [
     {
       name: "Home",
@@ -35,7 +34,7 @@ const Sidebar = () => {
       name: "Enrollments",
       icon: Category,
       iconActive: CategoryActive,
-      link: "/category",
+      link: "/enrollments",
     },
     {
       name: "Customers",
@@ -45,50 +44,52 @@ const Sidebar = () => {
     },
   ];
 
-
   const [showSubMenu, setShowSubMenu] = useState(true);
 
   let menuRef = useRef(null);
 
-
-
   const pathname = usePathname();
-  const [currentUrl , setCurrentUrl] = useState("")
+  const [currentUrl, setCurrentUrl] = useState("");
 
-  useEffect(()=>{
-   setCurrentUrl(pathname);
-   console.log(pathname);
-  })
+  useEffect(() => {
+    setCurrentUrl(pathname);
+    console.log(pathname);
+  });
 
   return (
-    <div className="bg-white   border-r">
+    <div className="bg-white  border-r h-screen relative">
       <aside className="w-20 2xl:w-24">
         <div className="p-6 mb-5">
           <Image alt="image" src={Logo} />
         </div>
-        <div className="px-4">
-          {menu.map((item, index) => (
-            <div
-              key={index}
-              className={`p-[12px] 2xl:p-5 flex items-center justify-center ${
-                currentUrl === item.link
-                  ? "bg-primary transition-all duration-300 ease-in-out rounded-lg"
-                  : ""
-              }`}
-            >
-              <Link href={item.link}>
-                {currentUrl === item.link ? (
-                  <Tooltip tooltip={item.name}>
-                    <Image alt="image" src={item.iconActive} />
-                  </Tooltip>
-                ) : (
-                  <Tooltip tooltip={item.name}>
-                    <Image alt="image" src={item.icon} />
-                  </Tooltip>
-                )}
-              </Link>
-            </div>
-          ))}
+        <div className="flex flex-col justify-between h-full ">
+          <div className="px-4">
+            {menu.map((item, index) => (
+              <div
+                key={index}
+                className={`p-[12px] 2xl:p-5 flex items-center justify-center ${
+                  currentUrl === item.link
+                    ? "bg-primary transition-all duration-300 ease-in-out rounded-lg"
+                    : ""
+                }`}
+              >
+                <Link href={item.link}>
+                  {currentUrl === item.link ? (
+                    <Tooltip tooltip={item.name}>
+                      <Image alt="image" src={item.iconActive} />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip tooltip={item.name}>
+                      <Image alt="image" src={item.icon} />
+                    </Tooltip>
+                  )}
+                </Link>
+              </div>
+            ))}
+          </div>
+          <div className="absolute bottom-5">
+            <Link href="/api/auth/signout">Logout</Link>
+          </div>
         </div>
       </aside>
     </div>

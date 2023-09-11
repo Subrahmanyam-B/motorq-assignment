@@ -1,8 +1,10 @@
+"use client";
+
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
 import Navbar from "@/components/main/Navbar";
 
-export default async function Home() {
+export default function Home() {
   // const createUser = async () => {
   //   await prismadb.user.create({
   //     data: {
@@ -17,14 +19,10 @@ export default async function Home() {
 
   // createUser();
 
-  const session = await getServerSession(options);
 
   return (
-    <main className="flex w-full">
-      <div className="w-full">
-        <Navbar user={session?.user} />
-        <div>{session?.user?.role ? session?.user?.role : "None"}</div>
-      </div>
+    <main className="flex w-full ">
+        <div>Home</div>
     </main>
   );
 }
