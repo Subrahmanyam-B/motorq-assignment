@@ -18,6 +18,13 @@ Both Frontend and Backend are deployed on the same server.
 Run:
 
 
+Initially do a NPM Install'
+
+```bash
+npm i
+```
+
+
 ```bash
 npm run dev
 # or
