@@ -3,13 +3,20 @@
 
 First, run the development server:
 
-Name : Subrahmanyam Bitra
-Roll No : S20210020280
-Track : AE
-Tech Stack : NextJS , MySQL , Prisma , Zustand
 
-Both Frontend and Backend are deployed on same server.
-Run --->
+
+Name: Subrahmanyam Bitra
+
+Roll No: S20210020280
+
+Track: AE
+
+Tech Stack: NextJS, MySQL, Prisma, Zustand
+
+Both Frontend and Backend are deployed on the same server.
+
+Run:
+
 
 ```bash
 npm run dev
