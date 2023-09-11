@@ -22,10 +22,17 @@ export async function GET(request: Request) {
         where: {
           createdBy: userId,
         },
+        include: {
+          vehicle: true,
+        },
       });
       return NextResponse.json(enrollments);
     } else if (session?.user?.userName && role === "admin") {
-      const enrollments = await prismadb.enrollment.findMany();
+      const enrollments = await prismadb.enrollment.findMany({
+        include: {
+          vehicle: true,
+        },
+      });
       return NextResponse.json(enrollments);
     }
   } catch (error) {
@@ -34,48 +41,44 @@ export async function GET(request: Request) {
   }
 }
 
-
 export async function DELETE(request: Request) {
-   try {
-      const { searchParams } = new URL(request.url);
-   
-      const id = searchParams.get("id");
-   
-      const session = await getServerSession(options);
-      if (session?.user?.userName && session?.user?.role === "admin" && id) {
-         const deleteEnrollment = await prismadb.enrollment.delete({
-         where: {
-            id,
-         },
-         });
-         return NextResponse.json(deleteEnrollment);
-      }
-   } catch (error) {
-      console.log("[ENROLLMENT_POST]", error);
-      return new NextResponse("Internal Server Error", { status: 500 });
-   }
-}
+  try {
+    const { searchParams } = new URL(request.url);
 
+    const id = searchParams.get("id");
+
+    const session = await getServerSession(options);
+    if (session?.user?.userName && session?.user?.role === "admin" && id) {
+      const deleteEnrollment = await prismadb.enrollment.delete({
+        where: {
+          id,
+        },
+      });
+      return NextResponse.json(deleteEnrollment);
+    }
+  } catch (error) {
+    console.log("[ENROLLMENT_POST]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
-   try {
+  try {
+    const { vehicleId, createdBy } = await request.json();
 
-      const {vehicleId , createdBy } = await request.json();
-
-      const session = await getServerSession(options);
-      if (session?.user?.userName && session?.user?.role === "customer") {
-         const createEnrollment = await prismadb.enrollment.create({
-         data: {
-            vehicleId,
-            createdBy,
-            status : 'pending',
-         },
-         });
-         return NextResponse.json(createEnrollment);
-      }
-   } catch (error) {
-      console.log("[ENROLLMENT_POST]", error);
-      return new NextResponse("Internal Server Error", { status: 500 });
-   }
+    const session = await getServerSession(options);
+    // if (session?.user?.userName && session?.user?.role === "customer") {
+      const createEnrollment = await prismadb.enrollment.create({
+        data: {
+          vehicleId,
+          createdBy,
+          status: "pending",
+        },
+      });
+      return NextResponse.json(createEnrollment);
+    // }
+  } catch (error) {
+    console.log("[ENROLLMENT_POST]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }
-

@@ -1,46 +1,36 @@
 "use client"
-import { useStoreModal } from "@/hooks/use-store-modal";
-import { useEffect } from "react";
-import prismadb from "@/lib/prismadb";
-import DialogForm from "@/components/dialog/DialogForm";
-import Link from "next/link";
+import { useVehicleModal } from "@/hooks/use-vehicle-modal";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import { VehicleList } from "@/components/main/vehicle-list";
 
 const VehiclesPage = () => {
+
+  const [vehicleData , setVehicleData] = useState([]);
+
+
   const getVehicles = async () => {
     await axios.get("/api/vehicles").then((res) => {
-      console.log(res.data);
+      console.log(res)
+      setVehicleData(res.data);
     }
     ).catch((err) => {
       console.log(err);
     })
   };
 
-  
-
-  // async function onClose() {
-  //  "use server"
-  //  console.log("modal close")
-  // }
-  // async function onSubmit() {
-  //  "use server"
-  //  console.log("modal close")
-  // }
-
-  const onOpen = useStoreModal((state) => state.onOpen);
-  const isOpen = useStoreModal((state) => state.isOpen);
+  const onOpen = useVehicleModal((state) => state.onOpen);
+  const isOpen = useVehicleModal((state) => state.isOpen);
 
   useEffect(() => {
-    getVehicles();
-    console
+    getVehicles()
   }, []);
 
   function loadMoreCustomers(){
     
   }
 
-  const disableLoadMore = false;
+  const disableLoadMore = true;
 
   function handleRowClick(){
 
@@ -48,27 +38,6 @@ const VehiclesPage = () => {
   function handleCustomerUpdate(){
 
   }
-
-  const data = [
-    {
-      id : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      vehicleId : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      make : "Toyota",
-      model : "Camry",
-      year : "2018",
-      VIN : "12345678901234567",
-      status : "pending",
-    },
-    {
-      id : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      vehicleId : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      make : "Toyota",
-      model : "Camry",
-      year : "2018",
-      VIN : "12345678901234567",
-      status : "pending",
-    }
-  ]
 
   useEffect(() => {
     // if (!isOpen) {
@@ -98,7 +67,7 @@ const VehiclesPage = () => {
         <form action=""></form>
       </div>
       <div>
-      <VehicleList data={data}
+      <VehicleList data={vehicleData}
           loadMore={loadMoreCustomers}
           loadMoreDisable={disableLoadMore}
           handleRowClick={handleRowClick}

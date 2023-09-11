@@ -7,12 +7,12 @@ export default withAuth(
    },
    {
    callbacks : {
-      authorized : ({token}) => token?.role === 'admin'
+      authorized : ({token}) => token?.role === 'admin' || token?.role === 'customer'
    },
 }
 )
 
-// export const config = {
+// export const config = 
 //    matcher : '/home'
 // }
 

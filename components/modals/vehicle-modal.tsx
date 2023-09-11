@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useStoreModal } from "@/hooks/use-store-modal";
+import { useVehicleModal } from "@/hooks/use-vehicle-modal";
 import { Modal } from "@/components/ui/modal";
 import {
   Form,
@@ -21,53 +21,57 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 
 const formSchema = z.object({
-  VIN: z.string().min(1),
-  make: z.string().min(1),
-  model: z.string().min(1),
-  year: z.string().min(1),
+  VIN: z
+    .string()
+    .min(1)
+    .regex(/^[A-HJ-NPR-Z0-9]{17}$/),
+  Make: z.string().min(1),
+  Model: z.string().min(1),
+  Year: z.number(),
 });
 
-export const StoreModal = () => {
-  const storeModal = useStoreModal();
+export const VehicleModal = () => {
+  const vehicleModal = useVehicleModal();
 
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       VIN: "",
-      make: "",
-      model: "",
-      year: "",
+      Make: "",
+      Model: "",
+      Year: 1980,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
-   try {
+    try {
       setLoading(true);
-      
-      const response = await axios.post('/api/stores', values);
 
-      window.location.assign(`/${response.data.id}`)
+      const response = await axios.post("/api/vehicles", values);
 
-   }catch (error){
+      window.location.assign(`/vehicles`);
+    } catch (error) {
       toast.error("Something went wrong");
-   }finally{
+    } finally {
       setLoading(false);
-   }
+    }
   };
 
   return (
     <Modal
       title={"Add New Vehicle"}
       description={"Add a new vehicle that can be enrolled by customer"}
-      isOpen={storeModal.isOpen}
-      onClose={storeModal.onClose}
+      isOpen={vehicleModal.isOpen}
+      onClose={vehicleModal.onClose}
     >
       <div className="p-4 ">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <FormField
               control={form.control}
               name="VIN"
@@ -75,56 +79,84 @@ export const StoreModal = () => {
                 <FormItem>
                   <FormLabel>VIN</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Enter VIN of the vehicle" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Enter VIN of the vehicle"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="make"
+              name="Make"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Make</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Enter Manufacturer" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Enter Manufacturer"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="model"
+              name="Model"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Model</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Enter Model of the vehicle" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Enter Model of the vehicle"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="year"
+              name="Year"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Year</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Enter year of manufacture" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Enter year of manufacture"
+                      {...field}
+                      onChange={(e) => {
+                        // Parse the input value to an integer
+                        const parsedValue = parseInt(e.target.value, 10);
+                        // Update the form field value with the parsed integer
+                        field.onChange(parsedValue);
+                      }}
+                    />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <div className="pt-6 flex items-center justify-end space-x-2">
-              <Button variant={"outline"} onClick={storeModal.onClose} disabled={loading}>
+              <Button
+                variant={"outline"}
+                onClick={vehicleModal.onClose}
+                disabled={loading}
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading}>Continue</Button>
+              <Button type="submit" disabled={loading}>
+                Continue
+              </Button>
             </div>
           </form>
         </Form>

@@ -36,19 +36,19 @@ export function VehicleList({
       cell: (info) => <span className="">{info.renderValue()}</span>,
       header: () => <span>ID</span>,
     }),
-    columnHelper.accessor('make', {
+    columnHelper.accessor('Make', {
       header: () => 'Make',
       cell: (info) => <span>{info.renderValue()}</span>,
     }),
-    columnHelper.accessor('model', {
+    columnHelper.accessor('Model', {
       header: () => <span>Model</span>,
       cell: (info) => <span>{info.renderValue() || '-'}</span>,
     }),
-    columnHelper.accessor('year', {
+    columnHelper.accessor('Year', {
       header: () => 'Year',
       cell: (info) => <span>{info.renderValue() || '0'}</span>,
     }),
-    columnHelper.accessor('createAt', {
+    columnHelper.accessor('createdAt', {
       header: () => 'Created On',
       cell: (info) => <span>{info.renderValue() || '0'}</span>,
     }),

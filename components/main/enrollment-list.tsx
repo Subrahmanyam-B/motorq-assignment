@@ -28,19 +28,19 @@ export function EnrollmentList({
   }
 
   const columns: any = [
-    columnHelper.accessor('VIN', {
+    columnHelper.accessor('vehicle.VIN', {
       cell: (info) => <span>{info.getValue()}</span>,
       header: () => <span>VIN</span>,
     }),
-    columnHelper.accessor('make', {
+    columnHelper.accessor('vehicle.Make', {
       header: () => 'Make',
       cell: (info) => <span>{info.renderValue()}</span>,
     }),
-    columnHelper.accessor('model', {
+    columnHelper.accessor('vehicle.Model', {
       header: () => <span>Model</span>,
       cell: (info) => <span>{info.renderValue() || '-'}</span>,
     }),
-    columnHelper.accessor('year', {
+    columnHelper.accessor('vehicle.Year', {
       header: () => 'Year',
       cell: (info) => <span>{info.renderValue() || '0'}</span>,
     }),

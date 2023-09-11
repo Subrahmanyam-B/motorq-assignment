@@ -1,32 +1,41 @@
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
+import { useSession } from "next-auth/react";
 import { useEnrollmentModal } from "@/hooks/use-enrollment-modal";
 import { EnrollmentList } from "@/components/main/enrollment-list";
 
 const EnrollmentsPage = () => {
-  const getVehicles = async () => {
-    await axios.get("/api/vehicles").then((res) => {
-      console.log(res.data);
+
+  const { data: session, status } = useSession();
+
+  const isAdmin = session?.user?.role === 'admin';
+  const [enrollmentData , setEnrollmentData] = useState([]);
+
+  const getEnrollments = async () => {
+    await axios.get("/api/enrollments").then((res) => {
+      console.log(res)
+      setEnrollmentData(res.data);
     }
     ).catch((err) => {
       console.log(err);
     })
   };
+
+
   const onOpen = useEnrollmentModal((state) => state.onOpen);
   const isOpen = useEnrollmentModal((state) => state.isOpen);
 
   useEffect(() => {
-    getVehicles();
-    console
+    getEnrollments();
   }, []);
 
   function loadMoreCustomers(){
     
   }
 
-  const disableLoadMore = false;
+  const disableLoadMore = true;
 
   function handleRowClick(){
 
@@ -35,28 +44,6 @@ const EnrollmentsPage = () => {
 
   }
 
-  const data = [
-    {
-      id : "1",
-      vehicleId : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      make : "Toyota",
-      model : "Camry",
-      year : "2018",
-      VIN : "12345678901234567",
-      status : "pending",
-    },
-    {
-      id : "2",
-      vehicleId : "5e4d37c2-0ea8-4d99-a628-eb0274f2e5aa",
-      make : "Toyota",
-      model : "Camry",
-      year : "2018",
-      VIN : "12345678901234567",
-      status : "pending",
-    }
-  ]
-
-
   useEffect(() => {
   }, [onOpen, isOpen]);
 
@@ -64,19 +51,21 @@ const EnrollmentsPage = () => {
     <div>
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold py-5">Enrollments</h1>
-        <button onClick={onOpen} className="bg-primary px-3 my-3 rounded-lg text-white font-semibold text-sm flex items-center justify-center">
+        {session?.user?.role ==='customer' ? <button onClick={onOpen} className="bg-primary px-3 my-3 rounded-lg text-white font-semibold text-sm flex items-center justify-center">
           + Add Enrollment
-        </button>
+        </button> : null }
       </div>
       <div>
         <form action=""></form>
       </div>
       <div>
-        <EnrollmentList data={data}
+        <EnrollmentList data={enrollmentData}
           loadMore={loadMoreCustomers}
           loadMoreDisable={disableLoadMore}
           handleRowClick={handleRowClick}
           updateData={handleCustomerUpdate}/>
+          isAdmin={isAdmin}
+
       </div>
     </div>
   );

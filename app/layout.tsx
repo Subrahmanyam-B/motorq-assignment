@@ -6,6 +6,7 @@ import Navbar from "@/components/main/Navbar";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
 import { ModalProvider } from "@/providers/modal-provider";
+import Providers from "@/providers/session";
 
 const inter = Inter({ subsets: ["latin"] });
 const monsterrat = Montserrat({ subsets: ["latin"] });
@@ -24,6 +25,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <Providers>
       <body className={monsterrat.className}>
       <ModalProvider />
         <div className="flex">
@@ -34,6 +36,7 @@ export default async function RootLayout({
           </div>
         </div>
       </body>
+      </Providers>
     </html>
   );
 }
